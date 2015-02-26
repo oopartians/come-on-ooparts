@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/oopartians/come-on-ooparts/issues"
   },
-  "homepage": "https://github.com/oopartians/come-on-ooparts"
+  "homepage": "https://github.com/oopartians/come-on-ooparts",
+  "engines": {
+    "node": "0.10.x"
+  }
 }
