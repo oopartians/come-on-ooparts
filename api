@@ -1,0 +1,132 @@
+COMMON PROTOCOL
+
+	successful response		http status code : 200
+
+	failure response			http status code : 4xx or 5xx
+							error : [text]
+							readable_error : [text]
+
+
+GET /member/list	extends COMMON PROTOCOL
+
+	successful response		list : [array of 'member']
+
+	'member' type			id : [string]
+							name : [string]
+							period_number : [integer number]
+							phone_number : [string]
+							mentor : 'member', [optional]
+							mentees : [array of 'member'], [optional]
+
+
+GET	/member/:member_id	extends COMMON PROTOCOL
+
+	successful response		'member'
+
+	'member' type			name : [string]
+							period_number : [integer number]
+							phone_number : [string]
+							mentor : 'member', [optional]
+							mentees : [array of 'member'], [optional]
+
+
+POST /admin/register	extends COMMON PROTOCOL
+
+	body	name : [string]
+			password : [string]
+			period_number : [integer number]
+			phone_number : [string]
+			admin : [boolean]
+			//image : [???]
+
+
+POST /admin/nominate_mentor	extends COMMON PROTOCOL
+
+	body	mentor_id : [string]
+			mentee_id : [string]
+
+
+POST /admin/report_attendance
+
+	body	member_ids : [array of string]
+
+
+POST /auth/session	extends COMMON PROTOCOL
+
+	body	name
+			password
+
+	successful response		session_token : [string]
+
+
+POST /auth/change_password	extends COMMON PROTOCOL
+
+	param	session_token : [string]
+	body	current_password : [string]
+			new_password : [string]
+
+
+GET /rank/neigong	extends COMMON PROTOCOL
+
+	succeeful response		list : [array of 'ranker']
+
+	'ranker' format			name : [string]
+							period_number : [integer number]
+							neigong : [number]
+
+
+GET /rank/cs_attendance	extends COMMON PROTOCOL (means consecutive attendance)
+
+	successful response		list : [array of 'ranker']
+
+	'ranker' format			name : [string]
+							period_number : [integer number]
+							cs_attendance : [integer number]
+
+
+GET /notice/today
+	
+	successful	response	word : [string]
+
+
+PUT /notice/word
+
+	body		word : [string]
+
+
+
+
+
+
+
+
+
+
+[working....]
+---------------------------
+GET /quest/open
+
+	succeeful response		http status code : 200
+							list : [array of 'quest']
+
+	failure response			http status code : 4xx or 5xx
+							error : [text]
+							readable_error : [text]
+
+	'quest' format			id : [string]
+							by : 'opener'
+							title : [string]
+
+	'opener' format			type : [string]
+
+	'member' type 'opener' format	name : [string]
+									period_number : [integer number]
+
+	'quest' example			id : "123918fasd8fc91923"
+							by :
+								type : "member"
+								name : "서병기"
+								period_number : 4
+
+----------------------------
+POST /quest/
