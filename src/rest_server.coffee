@@ -15,6 +15,12 @@ class RestServer
 		@app.get '/ping', (req,res) ->
 			res.status(200).send "pong"
 
+		@app.get '/ping2', (req,res) ->
+			res.status(200).send {session:'1234567890a'}
+
+		@app.get '/ping3', (req,res) ->
+			res.status(200).send [{name:'egg', period_number:5},{name:'sbg', period_number:4}]
+
 		global =
 			app : @app
 
