@@ -1,7 +1,6 @@
 express = require 'express'
 bodyParser = require 'body-parser'
 db = require './db'
-test = require './test'
 
 class RestServer
 
@@ -19,7 +18,8 @@ class RestServer
 			app : @app
 
 		db global
-		@app.use '/test', test(global)
+		@app.use '/test', (require './test') global
+		@app.use '/member', (require './member') global
 		return
 
 

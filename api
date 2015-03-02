@@ -30,6 +30,9 @@ GET	/member/:member_id	extends COMMON PROTOCOL
 							mentees : [array of 'member'], [optional]
 
 
+DELETE	/member/:member_id	extends COMMON PROTOCOL
+
+
 POST /admin/register	extends COMMON PROTOCOL
 
 	body	name : [string]
@@ -48,7 +51,7 @@ POST /admin/nominate_mentor	extends COMMON PROTOCOL
 
 POST /admin/report_attendance
 
-	body	member_ids : [array of string]
+	body	attendees : [array of string]
 
 
 POST /auth/session	extends COMMON PROTOCOL
@@ -94,7 +97,7 @@ PUT /notice/word
 	body		word : [string]
 
 
-
+ 
 
 
 
