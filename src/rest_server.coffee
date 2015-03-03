@@ -22,10 +22,13 @@ class RestServer
 
 		global =
 			app : @app
+			sessions : {}
 
 		db global
 		@app.use '/test', (require './test') global
 		@app.use '/member', (require './member') global
+		@app.use '/admin', (require './admin') global
+		@app.use '/auth', (require './auth') global
 		return
 
 

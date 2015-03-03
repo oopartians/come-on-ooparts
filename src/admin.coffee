@@ -42,19 +42,16 @@ module.exports = (global) ->
 
 			res.status(200).send()
 
-	router.post '/report_attendance', (req,res) ->
-		col = global.col("attendance")
-		{attendees} = req.body
+	router.post '/meeting', (req,res) ->
+		meeting_col = global.col("meeting")
 
-		async.
-
-		col.remove {_id:ObjectID(member_id)}, {single:true}, (err,member) ->
+		meeting_col.save req.body, (err,nr_saved) ->
 			if err?
 				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
 				return
 
-			unless member?
-				res.status(403).send {error:"NoSuchMember", readable_error:"no such member"}
+			if nr_saved == 0
+				res.status(403).send {error:"InternalError", readable_error:"nr_saved == 0"}
 				return
 
 			res.status(200).send()

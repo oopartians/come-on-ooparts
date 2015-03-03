@@ -49,9 +49,11 @@ POST /admin/nominate_mentor	extends COMMON PROTOCOL
 			mentee_id : [string]
 
 
-POST /admin/report_attendance
+POST /admin/meeting
 
 	body	attendees : [array of string]
+			date : [time]
+			desc : [string]
 
 
 POST /auth/session	extends COMMON PROTOCOL

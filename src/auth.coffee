@@ -1,36 +1,54 @@
 express = require 'express'
 ObjectID = require 'mongodb'
 
+session_token_possibles = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+random_string = (n,possibles) ->
+	text = ''
+	text += possibles.charAt(Math.floor(Math.random() * possibles.length)) for i in [0...n]
+	text
+
+
 module.exports = (global) ->
-	{app} = global
+	{app,sessions} = global
 
 	router = express.Router()
 
-	router.post '/register', (req,res) ->
+	router.post '/session', (req,res) ->
+		{name,password} = req.body
 		col = global.col("member")
-		col.count {}, (err,nr_docs) ->
+		col.findOne {name:name,password:password}, (err,doc) ->
 			if err?
 				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
 				return
 
-			console.log "nr_docs : #{nr_docs}"
-			res.status(200).send()
-			return
+			unless doc?
+				res.status(403).send {error:"NoSuchMember", readable_error:"no matching member"}
+				return
 
-			col.save req.body, (err,nr_saved) ->
-				if err?
-					res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
-					return
+			do
+				session_token = random_string 7, session_token_possibles
+			until not sessions[session_token]?
+			sessions[session_token] = doc
 
-				if nr_saved == 0
-					res.status(403).send {error:"InternalError", readable_error:"nr_saved == 0"}
-					return
+			res.status(200).send session_token:session_token
 
-				res.status(200).send()
+	auth = (req,res,next) ->
+		{session_token} = req.params
+		if session_token?
+			member_info = sessions[session_token]
+			unless member_info?
+				return next "NoSuchSession"
+			req.member = member_info
 
-	router.post '/nominate_mentor', (req,res) ->
-		col = global.col("test")
-		{member_id} = req.params
+		next()
+
+	router.post '/change_password', auth, (req,res) ->
+		{member} = req.params
+		unless member?
+			res.status(403).send {error:"UnauthorizedMember"}
+		{current_password,new_password} = req.body
+		col = global.col("member")
+
 
 		col.findOne {_id:ObjectID(member_id)}, (err,member) ->
 			if err?
