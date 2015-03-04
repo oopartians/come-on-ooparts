@@ -26,7 +26,7 @@ module.exports = (global) ->
 
 		async.parallel [
 			(next) ->
-				col.update {_id:ObjectID(mentor_id)}, {$set:{"mentees.#{mentee_id}":true}, (err,nr_updated) ->
+				col.update {_id:ObjectID(mentor_id)}, {$set:{"mentees.#{mentee_id}":true}}, (err,nr_updated) ->
 					return next err if err?
 					return next "nr_updated == 0" if nr_updated == 0
 					next()
