@@ -25,9 +25,9 @@ module.exports = (global) ->
 				res.status(403).send {error:"NoSuchMember", readable_error:"no matching member"}
 				return
 
-			do
+			loop
 				session_token = random_string 7, session_token_possibles
-			until not sessions[session_token]?
+				break if not sessions[session_token]?
 			sessions[session_token] = doc
 
 			res.status(200).send session_token:session_token
