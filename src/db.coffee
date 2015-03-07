@@ -9,7 +9,7 @@ module.exports = (global) ->
 	do try_ = ->
 		MongoClient.connect MONGOHQ_URL, (err,db) ->
 			if err
-				console.error "mongo connect failed : ", error, MONGOHQ_URL
+				console.error "mongo connect failed : ", err, MONGOHQ_URL
 				setTimeout try_, 3000
 				return
 			cached_db['default'] = db

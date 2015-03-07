@@ -67,8 +67,7 @@ POST /auth/session	extends COMMON PROTOCOL
 POST /auth/change_password	extends COMMON PROTOCOL
 
 	param	session_token : [string]
-	body	current_password : [string]
-			new_password : [string]
+	body	new_password : [string]
 
 
 GET /rank/neigong	extends COMMON PROTOCOL

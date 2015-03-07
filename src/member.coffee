@@ -1,5 +1,5 @@
 express = require 'express'
-ObjectID = require 'mongodb'
+{ObjectID} = require 'mongodb'
 
 module.exports = (global) ->
 	{app} = global
@@ -16,7 +16,7 @@ module.exports = (global) ->
 			res.status(200).send list
 
 	router.get '/:member_id', (req,res) ->
-		col = global.col("test")
+		col = global.col("member")
 		{member_id} = req.params
 
 		col.findOne {_id:ObjectID(member_id)}, (err,member) ->
@@ -28,10 +28,10 @@ module.exports = (global) ->
 				res.status(403).send {error:"NoSuchMember", readable_error:"no such member"}
 				return
 
-			res.status(200).send()
+			res.status(200).send member
 
 	router.delete '/:member_id', (req,res) ->
-		col = global.col("test")
+		col = global.col("member")
 		{member_id} = req.params
 
 		col.remove {_id:ObjectID(member_id)}, {single:true}, (err,member) ->

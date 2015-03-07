@@ -25,10 +25,11 @@ class RestServer
 			sessions : {}
 
 		db global
+		@app.use (require './auth-middleware') global
+		@app.use '/auth', (require './auth') global
 		@app.use '/test', (require './test') global
 		@app.use '/member', (require './member') global
 		@app.use '/admin', (require './admin') global
-		@app.use '/auth', (require './auth') global
 		return
 
 

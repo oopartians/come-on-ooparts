@@ -1,5 +1,5 @@
 express = require 'express'
-ObjectID = require 'mongodb'
+{ObjectID} = require 'mongodb'
 
 session_token_possibles = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 random_string = (n,possibles) ->
@@ -18,11 +18,11 @@ module.exports = (global) ->
 		col = global.col("member")
 		col.findOne {name:name,password:password}, (err,doc) ->
 			if err?
-				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+				res.status(400).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
 				return
 
 			unless doc?
-				res.status(403).send {error:"NoSuchMember", readable_error:"no matching member"}
+				res.status(400).send {error:"NoSuchMember", readable_error:"no matching member"}
 				return
 
 			loop
@@ -32,46 +32,22 @@ module.exports = (global) ->
 
 			res.status(200).send session_token:session_token
 
-	auth = (req,res,next) ->
-		{session_token} = req.params
-		if session_token?
-			member_info = sessions[session_token]
-			unless member_info?
-				return next "NoSuchSession"
-			req.member = member_info
-
-		next()
-
-	router.post '/change_password', auth, (req,res) ->
-		{member} = req.params
+	router.post '/change_password', (req,res) ->
+		{member} = req
 		unless member?
-			res.status(403).send {error:"UnauthorizedMember"}
-		{current_password,new_password} = req.body
+			res.status(400).send {error:"UnauthorizedMember"}
+			return
+
+		{new_password} = req.body
 		col = global.col("member")
 
-
-		col.findOne {_id:ObjectID(member_id)}, (err,member) ->
+		col.update {_id:ObjectID(member_id)}, {$set:{password:new_password}}, (err,member) ->
 			if err?
-				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+				res.status(400).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
 				return
 
 			unless member?
-				res.status(403).send {error:"NoSuchMember", readable_error:"no such member"}
-				return
-
-			res.status(200).send()
-
-	router.post '/report_attendance', (req,res) ->
-		col = global.col("test")
-		{member_id} = req.params
-
-		col.remove {_id:ObjectID(member_id)}, {single:true}, (err,member) ->
-			if err?
-				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
-				return
-
-			unless member?
-				res.status(403).send {error:"NoSuchMember", readable_error:"no such member"}
+				res.status(400).send {error:"NoSuchMember", readable_error:"no such member"}
 				return
 
 			res.status(200).send()
