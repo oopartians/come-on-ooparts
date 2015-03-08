@@ -30,6 +30,7 @@ class RestServer
 		@app.use '/test', (require './test') global
 		@app.use '/member', (require './member') global
 		@app.use '/admin', (require './admin') global
+		@app.use '/notice', (require './notice') global
 		return
 
 

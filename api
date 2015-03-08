@@ -2,7 +2,7 @@ COMMON PROTOCOL
 
 	successful response		http status code : 200
 
-	failure response			http status code : 4xx or 5xx
+	failure response		http status code : 4xx or 5xx
 							error : [text]
 							readable_error : [text]
 
@@ -64,7 +64,7 @@ POST /auth/session	extends COMMON PROTOCOL
 	successful response		session_token : [string]
 
 
-POST /auth/change_password	extends COMMON PROTOCOL
+PUT /auth/change_password	extends COMMON PROTOCOL
 
 	param	session_token : [string]
 	body	new_password : [string]
