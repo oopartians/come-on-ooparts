@@ -70,6 +70,11 @@ POST /auth/change_password	extends COMMON PROTOCOL
 	body	new_password : [string]
 
 
+DELETE /auth/unregister	extends COMMON PROTOCOL
+
+	param	session_token : [string]
+
+
 GET /rank/neigong	extends COMMON PROTOCOL
 
 	succeeful response		list : [array of 'ranker']

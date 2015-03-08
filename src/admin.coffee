@@ -17,7 +17,7 @@ module.exports = (global) ->
 				else
 					col.findOne {admin:true}, (err,doc) ->
 						return next {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"} if err?
-						return next {error:"InvalidAdminAccess", readable_error:"not an admin member"}
+						return next {error:"InvalidAdminAccess", readable_error:"not an admin member"} if doc?
 						next()
 		], (err) ->
 			if err?

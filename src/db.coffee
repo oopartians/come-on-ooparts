@@ -7,6 +7,10 @@ module.exports = (global) ->
 	cached_col = {}
 
 	do try_ = ->
+		unless MONGOHQ_URL
+			console.error "no MONGOHQ_URL!!!"
+			process.exit(1)
+
 		MongoClient.connect MONGOHQ_URL, (err,db) ->
 			if err
 				console.error "mongo connect failed : ", err, MONGOHQ_URL

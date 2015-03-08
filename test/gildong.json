@@ -3,5 +3,5 @@
 	"password" : "159753",
 	"period_number" : 5,
 	"phone_number" : "010-1234-5678",
-	"admin" : false
+	"admin" : true
 }
