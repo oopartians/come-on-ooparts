@@ -29,7 +29,7 @@ class RestServer
 			
 			req.setEncoding 'utf8'
 			res.writeHead 200, {'Content-Type': 'text/xml'}
-			res.end xml
+			res.status(200).send xml
 
 		global =
 			app : @app
