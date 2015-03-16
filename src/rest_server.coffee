@@ -20,6 +20,17 @@ class RestServer
 		@app.get '/ping3', (req,res) ->
 			res.status(200).send [{name:'egg', period_number:5},{name:'sbg', period_number:4}]
 
+		@app.get  "/crossdomain.xml", -> ( req, res ) ->
+			xml = '<?xml version="1.0"?>\n<!DOCTYPE cross-domain-policy SYSTEM' +
+			' http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">\n<cross-domain-policy>\n';
+			xml += '<allow-access-from domain="*" to-ports="*"/>\n';
+			xml += '<allow-http-request-headers-from domain="*" headers="*"/>\n'
+			xml += '</cross-domain-policy>\n';
+			
+			req.setEncoding 'utf8'
+			res.writeHead 200, {'Content-Type': 'text/xml'}
+			res.end xml
+
 		global =
 			app : @app
 			sessions : {}
