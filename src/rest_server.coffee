@@ -22,7 +22,7 @@ class RestServer
 
 		@app.get "/crossdomain.xml", ( req, res ) ->
 			xml = '<?xml version="1.0"?>\n<!DOCTYPE cross-domain-policy SYSTEM' +
-			' http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">\n<cross-domain-policy>\n';
+			' "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">\n<cross-domain-policy>\n';
 			xml += '<allow-access-from domain="*" to-ports="*"/>\n';
 			xml += '<allow-http-request-headers-from domain="*" headers="*"/>\n'
 			xml += '</cross-domain-policy>\n';
