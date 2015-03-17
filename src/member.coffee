@@ -1,5 +1,6 @@
 express = require 'express'
 {ObjectID} = require 'mongodb'
+_ = require 'underscore'
 
 module.exports = (global) ->
 	{app} = global
@@ -12,6 +13,9 @@ module.exports = (global) ->
 			if err?
 				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
 				return
+
+			list = list.map (member)->
+				_(member).omit 'password'
 
 			res.status(200).send list
 
@@ -28,7 +32,7 @@ module.exports = (global) ->
 				res.status(403).send {error:"NoSuchMember", readable_error:"no such member"}
 				return
 
-			res.status(200).send member
+			res.status(200).send _(member).omit 'password'
 
 	router.delete '/:member_id', (req,res) ->
 		col = global.col("member")
