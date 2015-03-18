@@ -1,5 +1,6 @@
 express = require 'express'
 {ObjectID} = require 'mongodb'
+admin_auth = require './some/admin_auth'
 
 module.exports = (global) ->
 	{app} = global
@@ -19,7 +20,7 @@ module.exports = (global) ->
 			res.status(200).send doc
 
 
-	router.put '/word', (req,res) ->
+	router.put '/word', admin_auth, (req,res) ->
 		{word} = req.body
 
 		col = global.col("notice")

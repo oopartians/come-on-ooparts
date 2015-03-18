@@ -1,6 +1,7 @@
 express = require 'express'
 {ObjectID} = require 'mongodb'
 _ = require 'underscore'
+admin_auth = require './some/admin_auth'
 
 module.exports = (global) ->
 	{app} = global
@@ -34,7 +35,7 @@ module.exports = (global) ->
 
 			res.status(200).send _(member).omit 'password'
 
-	router.delete '/:member_id', (req,res) ->
+	router.delete '/:member_id', admin_auth, (req,res) ->
 		col = global.col("member")
 		{member_id} = req.params
 
