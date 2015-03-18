@@ -1,6 +1,7 @@
 express = require 'express'
 {ObjectID} = require 'mongodb'
 async = require 'async'
+admin_auth = require './some/admin_auth'
 
 module.exports = (global) ->
 	{app} = global
@@ -35,7 +36,7 @@ module.exports = (global) ->
 
 				res.status(200).send()
 
-	router.post '/nominate_mentor', (req,res) ->
+	router.post '/nominate_mentor', admin_auth, (req,res) ->
 		col = global.col("member")
 		{mentor_id,mentee_id} = req.body
 
@@ -59,7 +60,7 @@ module.exports = (global) ->
 
 			res.status(200).send()
 
-	router.post '/meeting', (req,res) ->
+	router.post '/meeting', admin_auth, (req,res) ->
 		meeting_col = global.col("meeting")
 
 		meeting_col.save req.body, (err,nr_saved) ->
