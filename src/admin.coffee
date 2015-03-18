@@ -16,6 +16,7 @@ module.exports = (global) ->
 					next()
 				else
 					col.findOne {admin:true}, (err,doc) ->
+						console.log("db error : #{JSON.stringify(err)} or you are not an admin")
 						return next {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"} if err?
 						return next {error:"InvalidAdminAccess", readable_error:"not an admin member"} if doc?
 						next()
@@ -26,10 +27,12 @@ module.exports = (global) ->
 
 			col.save req.body, (err,nr_saved) ->
 				if err?
+					console.log("db error : #{JSON.stringify(err)}")
 					res.status(400).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
 					return
 
 				if nr_saved == 0
+					console.log("nr_saved == 0")
 					res.status(400).send {error:"InternalError", readable_error:"nr_saved == 0"}
 					return
 
