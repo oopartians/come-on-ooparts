@@ -30,7 +30,7 @@ module.exports = (global) ->
 				break if not sessions[session_token]?
 			sessions[session_token] = doc
 
-			res.status(200).send session_token:session_token
+			res.status(200).send session_token:session_token, member:doc
 
 	router.put '/change_password', (req,res) ->
 		{member} = req
