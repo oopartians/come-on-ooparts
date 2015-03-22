@@ -40,6 +40,7 @@ class RestServer
 
 		db global
 		@app.use (require './auth-middleware') global
+		@app.use (require './method-override-middleware')
 		@app.use '/auth', (require './auth') global
 		@app.use '/test', (require './test') global
 		@app.use '/member', (require './member') global
