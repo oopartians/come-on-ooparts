@@ -9,7 +9,7 @@ module.exports = (global) ->
 		col = global.col("test")
 		col.find({}).toArray (err,list) ->
 			if err?
-				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+				res.status(403).send new InternalApiError("db error", err)
 				return
 
 			res.status(200).send list
@@ -19,11 +19,11 @@ module.exports = (global) ->
 
 		col.save req.body, (err,nr_saved) ->
 			if err?
-				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+				res.status(403).send new InternalApiError("db error", err)
 				return
 
 			if nr_saved == 0
-				res.status(403).send {error:"InternalError", readable_error:"db nr_saved == 0"}
+				res.status(403).send new InternalApiError("nr_saved == 0")
 				return
 
 			res.status(200).send()
@@ -33,7 +33,7 @@ module.exports = (global) ->
 
 		col.drop (err) ->
 			if err?
-				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+				res.status(403).send new InternalApiError("db error", err)
 				return
 
 			res.status(200).send()

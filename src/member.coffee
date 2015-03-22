@@ -12,7 +12,7 @@ module.exports = (global) ->
 		col = global.col("member")
 		col.find({}).toArray (err,list) ->
 			if err?
-				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+				res.status(403).send new InternalApiError("db error", err)
 				return
 
 			list = list.map (member)->
@@ -26,11 +26,11 @@ module.exports = (global) ->
 
 		col.findOne {_id:ObjectID(member_id)}, (err,member) ->
 			if err?
-				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+				res.status(403).send new InternalApiError("db error", err)
 				return
 
 			unless member?
-				res.status(403).send {error:"NoSuchMember", readable_error:"no such member"}
+				res.status(403).send new ApiError("NoSuchMember", "no such member")
 				return
 
 			res.status(200).send _(member).omit 'password'
@@ -41,11 +41,11 @@ module.exports = (global) ->
 
 		col.remove {_id:ObjectID(member_id)}, {single:true}, (err,member) ->
 			if err?
-				res.status(403).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+				res.status(403).send new InternalApiError("db error", err)
 				return
 
 			unless member?
-				res.status(403).send {error:"NoSuchMember", readable_error:"no such member"}
+				res.status(403).send new ApiError("NoSuchMember", "no such member")
 				return
 
 			res.status(200).send()

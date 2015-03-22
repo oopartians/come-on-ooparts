@@ -2,6 +2,8 @@ express = require 'express'
 bodyParser = require 'body-parser'
 db = require './db'
 
+require './global/api_error'
+
 class RestServer
 
 	constructor : ->

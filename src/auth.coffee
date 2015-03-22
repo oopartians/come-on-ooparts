@@ -18,11 +18,11 @@ module.exports = (global) ->
 		col = global.col("member")
 		col.findOne {name:name,password:password}, (err,doc) ->
 			if err?
-				res.status(400).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+				res.status(400).send new InternalApiError("db error", err)
 				return
 
 			unless doc?
-				res.status(400).send {error:"NoSuchMember", readable_error:"no matching member"}
+				res.status(400).send new ApiError("NoSuchMember", "no matching member")
 				return
 
 			loop
@@ -35,7 +35,7 @@ module.exports = (global) ->
 	router.put '/change_password', (req,res) ->
 		{member} = req
 		unless member?
-			res.status(400).send {error:"UnauthorizedMember"}
+			res.status(400).send new ApiError("UnauthorizedMember")
 			return
 
 		{new_password} = req.body
@@ -43,11 +43,11 @@ module.exports = (global) ->
 
 		col.update {_id:member._id}, {$set:{password:new_password}}, (err,member) ->
 			if err?
-				res.status(400).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+				res.status(400).send new InternalApiError("db error", err)
 				return
 
 			unless member?
-				res.status(400).send {error:"NoSuchMember", readable_error:"no such member"}
+				res.status(400).send new ApiError("NoSuchMember", "no such member")
 				return
 
 			res.status(200).send()
@@ -55,18 +55,18 @@ module.exports = (global) ->
 	router.delete '/unregister', (req,res) ->
 		{member} = req
 		unless member?
-			res.status(400).send {error:"UnauthorizedMember"}
+			res.status(400).send new ApiError("UnauthorizedMember")
 			return
 
 		col = global.col("member")
 
 		col.remove {_id:member._id}, {single:true}, (err,nr_removed) ->
 			if err?
-				res.status(400).send {error:"InternalError", readable_error:"db error : #{JSON.stringify err}"}
+				res.status(400).send new InternalApiError("db error", err)
 				return
 
 			if nr_removed == 0
-				res.status(400).send {error:"InternalError", readable_error:"nr_removed == 0"}
+				res.status(400).send new InternalApiError("nr_removed == 0")
 				return
 
 			res.status(200).send()

@@ -17,8 +17,8 @@ module.exports = (global) ->
 					next()
 				else
 					col.findOne {admin:true}, (err,doc) ->
-						return next {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"} if err?
-						return next {error:"InvalidAdminAccess", readable_error:"not an admin member"} if doc?
+						return next new InternalApiError("db error", err) if err?
+						return next new ApiError("InvalidAdminAccess", "not an admin member! not even a first registration") if doc?
 						next()
 		], (err) ->
 			if err?
@@ -27,11 +27,11 @@ module.exports = (global) ->
 
 			col.save req.body, (err,nr_saved) ->
 				if err?
-					res.status(400).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+					res.status(400).send new InternalApiError("db error", err)
 					return
 
 				if nr_saved == 0
-					res.status(400).send {error:"InternalError", readable_error:"nr_saved == 0"}
+					res.status(400).send new InternalApiError("nr_saved == 0", err)
 					return
 
 				res.status(200).send()
@@ -45,17 +45,17 @@ module.exports = (global) ->
 				setter = {}
 				setter["mentees.#{mentee_id}"] = true
 				col.update {_id:ObjectID(mentor_id)}, {$set:setter}, (err,nr_updated) ->
-					return next err if err?
-					return next "nr_updated == 0" if nr_updated == 0
+					return next new InternalApiError("db error", err) if err?
+					return next new InternalApiError("nr_updated == 0") if nr_updated == 0
 					next()
 			(next) ->
 				col.update {_id:ObjectID(mentee_id)}, {$set:{"mentor":ObjectID(mentor_id)}}, (err,nr_updated) ->
-					return next err if err?
-					return next "nr_updated == 0" if nr_updated == 0
+					return next new InternalApiError("db error", err) if err?
+					return next new InternalApiError("nr_updated == 0") if nr_updated == 0
 					next()
-		], (err) ->
-			if err?
-				res.status(400).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+		], (apierror) ->
+			if apierror?
+				res.status(400).send apierror
 				return
 
 			res.status(200).send()
@@ -65,11 +65,11 @@ module.exports = (global) ->
 
 		meeting_col.save req.body, (err,nr_saved) ->
 			if err?
-				res.status(400).send {error:"InternalError", readable_error:"db error : #{JSON.stringify(err)}"}
+				res.status(400).send new InternalApiError("db error", err)
 				return
 
 			if nr_saved == 0
-				res.status(400).send {error:"InternalError", readable_error:"nr_saved == 0"}
+				res.status(400).send new InternalApiError("nr_saved == 0")
 				return
 
 			res.status(200).send()
