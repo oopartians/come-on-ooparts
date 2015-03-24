@@ -1,6 +1,6 @@
 class ApiError
 	constructor : (@code,@readable_message,@metas...) ->
-		@metas.push stack:(new Error).stack
+		@stack = (new Error).stack
 
 
 	toJSON : ->
@@ -11,6 +11,7 @@ class ApiError
 
 		error : @code
 		readable_error : readable_message
+		stack : @stack
 
 class InternalApiError extends ApiError
 	constructor : (@readable_message,@metas...) ->
