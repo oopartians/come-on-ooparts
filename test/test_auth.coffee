@@ -15,14 +15,14 @@ get_session_ = (auth,next) ->
 	}, (err,res,body) ->
 		return next err if err?
 		return next body if res.statusCode != 200
-		next null, body.session_token
+		next null, body.session_token, body.first_connection
 
 get_session = (auth,next) ->
-	get_session_ auth, (err,session_token) ->
+	get_session_ auth, (err,session_token,first_connection) ->
 		expect(err).to.be.null
 		expect(session_token).not.to.be.null
 		expect(session_token).to.have.length(7)
-		next session_token
+		next session_token, first_connection
 
 describe '#rest', ->
 
@@ -38,8 +38,14 @@ describe '#rest', ->
 			expect(res.statusCode).to.equal(200)
 			next()
 
-	it 'should ok to get session', (next) ->
-		get_session (require './gildong-auth.json'), (session_token) ->
+	it 'should ok to get session and it must be a first connection', (next) ->
+		get_session (require './gildong-auth.json'), (session_token,first_connection) ->
+			expect(first_connection).to.be.true
+			next()
+
+	it 'should ok to get session and it must not be a first connection', (next) ->
+		get_session (require './gildong-auth.json'), (session_token,first_connection) ->
+			expect(first_connection).to.be.false
 			next()
 
 	it 'should ok to change password', (next) ->
