@@ -6,12 +6,7 @@ COMMON PROTOCOL
 							error : [text]
 							readable_error : [text]
 
-
-GET /member/list	extends COMMON PROTOCOL
-
-	successful response		list : [array of 'member']
-
-	'member' type			id : [string]
+def 	'member' type		id : [string]
 							name : [string]
 							period_number : [integer number]
 							phone_number : [string]
@@ -19,15 +14,14 @@ GET /member/list	extends COMMON PROTOCOL
 							mentees : [array of 'member'], [optional]
 
 
+GET /member/list	extends COMMON PROTOCOL
+
+	successful response		list : [array of 'member']
+
+
 GET	/member/:member_id	extends COMMON PROTOCOL
 
 	successful response		'member'
-
-	'member' type			name : [string]
-							period_number : [integer number]
-							phone_number : [string]
-							mentor : 'member', [optional]
-							mentees : [array of 'member'], [optional]
 
 
 DELETE	/member/:member_id	extends COMMON PROTOCOL
@@ -62,6 +56,10 @@ POST /auth/session	extends COMMON PROTOCOL
 			password
 
 	successful response		session_token : [string]
+							first_connection : [boolean]
+							you : 'member'
+
+
 
 
 PUT /auth/change_password	extends COMMON PROTOCOL

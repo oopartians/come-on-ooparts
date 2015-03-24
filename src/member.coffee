@@ -16,7 +16,7 @@ module.exports = (global) ->
 				return
 
 			list = list.map (member)->
-				_(member).omit 'password'
+				ReturnMember(member)
 
 			res.status(200).send list
 
@@ -33,7 +33,7 @@ module.exports = (global) ->
 				res.status(403).send new ApiError("NoSuchMember", "no such member")
 				return
 
-			res.status(200).send _(member).omit 'password'
+			res.status(200).send ReturnMember(member)
 
 	router.delete '/:member_id', admin_auth, (req,res) ->
 		col = global.col("member")

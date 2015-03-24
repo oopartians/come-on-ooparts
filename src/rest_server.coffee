@@ -3,6 +3,7 @@ bodyParser = require 'body-parser'
 db = require './db'
 
 require './global/api_error'
+require './global/return_member'
 
 class RestServer
 
