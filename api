@@ -10,6 +10,7 @@ def 	'member' type		id : [string]
 							name : [string]
 							period_number : [integer number]
 							phone_number : [string]
+							cs_attendance : [integer number], [optional]
 							mentor : 'member', [optional]
 							mentees : [array of 'member'], [optional]
 
