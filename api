@@ -75,20 +75,12 @@ DELETE /auth/unregister	extends COMMON PROTOCOL
 
 GET /rank/neigong	extends COMMON PROTOCOL
 
-	succeeful response		list : [array of 'ranker']
-
-	'ranker' format			name : [string]
-							period_number : [integer number]
-							neigong : [number]
+	succeeful response		list : [array of 'member'] length 10
 
 
 GET /rank/cs_attendance	extends COMMON PROTOCOL (means consecutive attendance)
 
-	successful response		list : [array of 'ranker']
-
-	'ranker' format			name : [string]
-							period_number : [integer number]
-							cs_attendance : [integer number]
+	successful response		list : [array of 'member'] length 10
 
 
 GET /notice/today

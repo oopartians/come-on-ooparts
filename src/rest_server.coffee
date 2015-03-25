@@ -47,6 +47,7 @@ class RestServer
 		@app.use '/member', (require './member') global
 		@app.use '/admin', (require './admin') global
 		@app.use '/notice', (require './notice') global
+		@app.use '/rank', (require './rank') global
 		return
 
 
