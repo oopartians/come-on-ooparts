@@ -6,9 +6,9 @@ admin_auth = require './some/admin_auth'
 module.exports = (global) ->
 	{app} = global
 
-	router = express.Router()
+	express.Router()
 
-	router.get '/list', (req,res) ->
+	.get '/list', (req,res) ->
 		col = global.col("member")
 		col.find({}).toArray (err,list) ->
 			if err?
@@ -20,7 +20,7 @@ module.exports = (global) ->
 
 			res.status(200).send list
 
-	router.get '/:member_id', (req,res) ->
+	.get '/:member_id', (req,res) ->
 		col = global.col("member")
 		{member_id} = req.params
 
@@ -35,7 +35,7 @@ module.exports = (global) ->
 
 			res.status(200).send ReturnMember(member)
 
-	router.delete '/:member_id', admin_auth, (req,res) ->
+	.delete '/:member_id', admin_auth, (req,res) ->
 		col = global.col("member")
 		{member_id} = req.params
 

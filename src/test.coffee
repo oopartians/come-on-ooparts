@@ -3,9 +3,9 @@ express = require 'express'
 module.exports = (global) ->
 	{app} = global
 
-	router = express.Router()
+	express.Router()
 
-	router.get '/aaa', (req,res) ->
+	.get '/aaa', (req,res) ->
 		col = global.col("test")
 		col.find({}).toArray (err,list) ->
 			if err?
@@ -14,7 +14,7 @@ module.exports = (global) ->
 
 			res.status(200).send list
 
-	router.post '/aaa', (req,res) ->
+	.post '/aaa', (req,res) ->
 		col = global.col("test")
 
 		col.save req.body, (err,nr_saved) ->
@@ -28,7 +28,7 @@ module.exports = (global) ->
 
 			res.status(200).send()
 
-	router.delete '/aaa', (req,res) ->
+	.delete '/aaa', (req,res) ->
 		col = global.col("test")
 
 		col.drop (err) ->

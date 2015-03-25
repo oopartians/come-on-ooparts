@@ -6,9 +6,9 @@ admin_auth = require './some/admin_auth'
 module.exports = (global) ->
 	{app} = global
 
-	router = express.Router()
+	express.Router()
 
-	router.post '/register', (req,res) ->
+	.post '/register', (req,res) ->
 		col = global.col("member")
 
 		async.parallel [
@@ -36,7 +36,7 @@ module.exports = (global) ->
 
 				res.status(200).send()
 
-	router.post '/nominate_mentor', admin_auth, (req,res) ->
+	.post '/nominate_mentor', admin_auth, (req,res) ->
 		col = global.col("member")
 		{mentor_id,mentee_id} = req.body
 
@@ -60,7 +60,7 @@ module.exports = (global) ->
 
 			res.status(200).send()
 
-	router.post '/meeting', admin_auth, (req,res) ->
+	.post '/meeting', admin_auth, (req,res) ->
 		meeting_col = global.col("meeting")
 
 		meeting_col.save req.body, (err,nr_saved) ->

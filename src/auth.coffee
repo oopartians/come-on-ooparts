@@ -25,9 +25,9 @@ check_same_day_in_korea = (A,B) ->
 module.exports = (global) ->
 	{app,sessions} = global
 
-	router = express.Router()
+	express.Router()
 
-	router.post '/session', (req,res) ->
+	.post '/session', (req,res) ->
 		{name,password} = req.body
 		col = global.col("member")
 		now = new Date
@@ -76,7 +76,7 @@ module.exports = (global) ->
 				you : ReturnMember(member)
 				first_connection : first_connection
 
-	router.put '/change_password', (req,res) ->
+	.put '/change_password', (req,res) ->
 		{member} = req
 		unless member?
 			res.status(400).send new ApiError("UnauthorizedMember")
@@ -96,7 +96,7 @@ module.exports = (global) ->
 
 			res.status(200).send()
 
-	router.delete '/unregister', (req,res) ->
+	.delete '/unregister', (req,res) ->
 		{member} = req
 		unless member?
 			res.status(400).send new ApiError("UnauthorizedMember")
