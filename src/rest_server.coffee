@@ -27,8 +27,6 @@ class RestServer
 		@sv = (require 'http').Server @app
 
 		@app.use express.query()
-		@app.use bodyParser.json()
-
 
 		@app.get '/ping', (req,res) ->
 			res.status(200).send "pong"
@@ -56,15 +54,19 @@ class RestServer
 			sessions : {}
 
 		db global
+
 		@app.use (require './auth-middleware') global
+		@app.use '/files', (require './files') global
+
+		@app.use bodyParser.json()
 		@app.use (require './method-override-middleware')
+
 		@app.use '/auth', (require './auth') global
 		@app.use '/test', (require './test') global
 		@app.use '/member', (require './member') global
 		@app.use '/admin', (require './admin') global
 		@app.use '/notice', (require './notice') global
 		@app.use '/rank', (require './rank') global
-		@app.use '/files', (require './files') global
 		@app.use log_error
 		@app.use api_error_handler
 		return
