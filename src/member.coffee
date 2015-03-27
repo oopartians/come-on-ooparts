@@ -12,7 +12,7 @@ module.exports = (global) ->
 		col = global.col("member")
 		col.find({}).toArray (err,list) ->
 			if err?
-				res.status(403).send new InternalApiError("db error", err)
+				res.status(500).send new InternalApiError("db error", err)
 				return
 
 			list = list.map (member)->
@@ -26,7 +26,7 @@ module.exports = (global) ->
 
 		col.findOne {_id:ObjectID(member_id)}, (err,member) ->
 			if err?
-				res.status(403).send new InternalApiError("db error", err)
+				res.status(500).send new InternalApiError("db error", err)
 				return
 
 			unless member?
@@ -41,7 +41,7 @@ module.exports = (global) ->
 
 		col.remove {_id:ObjectID(member_id)}, {single:true}, (err,member) ->
 			if err?
-				res.status(403).send new InternalApiError("db error", err)
+				res.status(500).send new InternalApiError("db error", err)
 				return
 
 			unless member?

@@ -22,16 +22,16 @@ module.exports = (global) ->
 						next()
 		], (err) ->
 			if err?
-				res.status(400).send err
+				res.status(403).send err
 				return
 
 			col.save req.body, (err,nr_saved) ->
 				if err?
-					res.status(400).send new InternalApiError("db error", err)
+					res.status(500).send new InternalApiError("db error", err)
 					return
 
 				if nr_saved == 0
-					res.status(400).send new InternalApiError("nr_saved == 0", err)
+					res.status(500).send new InternalApiError("nr_saved == 0", err)
 					return
 
 				res.status(200).send()
@@ -55,7 +55,7 @@ module.exports = (global) ->
 					next()
 		], (apierror) ->
 			if apierror?
-				res.status(400).send apierror
+				res.status(403).send apierror
 				return
 
 			res.status(200).send()
@@ -65,11 +65,11 @@ module.exports = (global) ->
 
 		meeting_col.save req.body, (err,nr_saved) ->
 			if err?
-				res.status(400).send new InternalApiError("db error", err)
+				res.status(500).send new InternalApiError("db error", err)
 				return
 
 			if nr_saved == 0
-				res.status(400).send new InternalApiError("nr_saved == 0")
+				res.status(500).send new InternalApiError("nr_saved == 0")
 				return
 
 			res.status(200).send()

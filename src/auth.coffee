@@ -68,8 +68,6 @@ module.exports = (global) ->
 					# for atomic
 					Q.last_attendance_date_time = member.last_attendance_date_time
 
-				console.log "inc_cs_attendance : ", inc_cs_attendance
-
 				if not inc_cs_attendance
 					next()
 					return
@@ -87,7 +85,7 @@ module.exports = (global) ->
 					next()
 
 		], (err) ->
-			return res.status(400).send err if err?
+			return res.status(403).send err if err?
 
 			loop
 				session_token = random_string 7, session_token_possibles
@@ -103,7 +101,7 @@ module.exports = (global) ->
 	.put '/change_password', (req,res) ->
 		{member} = req
 		unless member?
-			res.status(400).send new ApiError("UnauthorizedMember")
+			res.status(401).send new ApiError("UnauthorizedMember")
 			return
 
 		{new_password} = req.body
@@ -111,11 +109,11 @@ module.exports = (global) ->
 
 		col.update {_id:member._id}, {$set:{password:new_password}}, (err,member) ->
 			if err?
-				res.status(400).send new InternalApiError("db error", err)
+				res.status(500).send new InternalApiError("db error", err)
 				return
 
 			unless member?
-				res.status(400).send new ApiError("NoSuchMember", "no such member")
+				res.status(500).send new ApiError("NoSuchMember", "no such member")
 				return
 
 			res.status(200).send()
@@ -123,18 +121,18 @@ module.exports = (global) ->
 	.delete '/unregister', (req,res) ->
 		{member} = req
 		unless member?
-			res.status(400).send new ApiError("UnauthorizedMember")
+			res.status(401).send new ApiError("UnauthorizedMember")
 			return
 
 		col = global.col("member")
 
 		col.remove {_id:member._id}, {single:true}, (err,nr_removed) ->
 			if err?
-				res.status(400).send new InternalApiError("db error", err)
+				res.status(500).send new InternalApiError("db error", err)
 				return
 
 			if nr_removed == 0
-				res.status(400).send new InternalApiError("nr_removed == 0")
+				res.status(500).send new InternalApiError("nr_removed == 0")
 				return
 
 			res.status(200).send()

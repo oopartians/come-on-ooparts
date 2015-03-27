@@ -1,6 +1,7 @@
 class ApiError
 	constructor : (@code,@readable_message,@metas...) ->
 		@stack = (new Error).stack
+		@class = 'ApiError'
 
 
 	toJSON : ->
@@ -12,6 +13,9 @@ class ApiError
 		error : @code
 		readable_error : readable_message
 		stack : @stack
+
+	status : (@statuscode) ->
+		@
 
 class InternalApiError extends ApiError
 	constructor : (@readable_message,@metas...) ->

@@ -11,7 +11,7 @@ module.exports = (global) ->
 		col = global.col("notice")
 		col.find().sort({$natural:-1}).limit(1).toArray (err,docs) ->
 			if err?
-				res.status(403).send new InternalApiError("db error", err)
+				res.status(500).send new InternalApiError("db error", err)
 				return
 
 			[doc] = docs
@@ -24,7 +24,7 @@ module.exports = (global) ->
 		col = global.col("notice")
 		col.save {word:word}, (err) ->
 			if err?
-				res.status(403).send new InternalApiError("db error", err)
+				res.status(500).send new InternalApiError("db error", err)
 				return
 
 			res.status(200).send()

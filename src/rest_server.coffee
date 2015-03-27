@@ -5,6 +5,21 @@ db = require './db'
 require './global/api_error'
 require './global/return_member'
 
+log_error = (err,req,res,next) ->
+	console.error String(err)
+	console.error err.stack
+	next err
+
+api_error_handler = (err,req,res,next) ->
+	unless err?
+		next()
+		return
+
+	if err.class == 'ApiError'
+		res.status(err.statuscode).send err
+	else
+		next err
+
 class RestServer
 
 	constructor : ->
@@ -13,6 +28,7 @@ class RestServer
 
 		@app.use express.query()
 		@app.use bodyParser.json()
+
 
 		@app.get '/ping', (req,res) ->
 			res.status(200).send "pong"
@@ -48,6 +64,9 @@ class RestServer
 		@app.use '/admin', (require './admin') global
 		@app.use '/notice', (require './notice') global
 		@app.use '/rank', (require './rank') global
+		@app.use '/files', (require './files') global
+		@app.use log_error
+		@app.use api_error_handler
 		return
 
 

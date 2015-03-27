@@ -84,20 +84,24 @@ GET /rank/cs_attendance	extends COMMON PROTOCOL (means consecutive attendance)
 	successful response		list : [array of 'member'] length 10
 
 
-GET /notice/today
+GET /notice/today extends COMMON PROTOCOL
 	
-	successful	response	word : [string]
+	successful response		word : [string]
 
 
-PUT /notice/word
+PUT /notice/word extends COMMON PROTOCOL
 
 	body		word : [string]
 
 
- 
+POST /files/upload extends COMMON PROTOCOL
+
+	successful response		id : [string]
 
 
+GET	/files/:id extends COMMON PROTOCOL
 
+	successful response		[binary]
 
 
 

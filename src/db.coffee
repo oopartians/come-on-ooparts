@@ -30,6 +30,9 @@ module.exports = (global) ->
 
 		db.collection(colname)
 
+	global.db = (dbname='default') ->
+		cached_db[dbname]
+
 	global.col = (path) ->
 		col = cached_col[path]
 
