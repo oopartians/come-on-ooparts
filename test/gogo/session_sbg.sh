@@ -1,1 +1,0 @@
-curl -i -X POST "http://localhost:5000/auth/session" -H "Content-Type:application/json" -d @"../sbg-auth.json"
