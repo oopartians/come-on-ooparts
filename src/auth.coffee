@@ -101,13 +101,13 @@ module.exports = (global) ->
 		{new_password} = req.body
 		col = global.col("member")
 
-		col.update {_id:member._id}, {$set:{password:new_password}}, (err,member) ->
+		col.update {_id:member._id}, {$set:{password:new_password}}, (err,nr_updated) ->
 			if err?
 				res.status(500).send new InternalApiError("db error", err)
 				return
 
-			unless member?
-				res.status(500).send new ApiError("NoSuchMember", "no such member")
+			if nr_updated == 0
+				res.status(500).send new InternalApiError("nr_updated == 0")
 				return
 
 			res.status(200).send()
@@ -130,3 +130,19 @@ module.exports = (global) ->
 				return
 
 			res.status(200).send()
+
+	.put '/change_profile_url', (req,res) ->
+		{member} = req
+		{new_profile_url} = req.body
+
+		col = global.col("member")
+		col.update {_id:member._id}, {$set:{profile_url:new_profile_url}}, (err,nr_updated) ->
+			if err?
+				res.status(500).send new InternalApiError("db error", err)
+				return
+
+			if nr_updated == 0
+				res.status(500).send new InternalApiError("nr_updated == 0")
+				return
+
+			res.status(200).send()	

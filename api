@@ -61,8 +61,6 @@ POST /auth/session	extends COMMON PROTOCOL
 							you : 'member'
 
 
-
-
 PUT /auth/change_password	extends COMMON PROTOCOL
 
 	param	session_token : [string]
@@ -72,6 +70,12 @@ PUT /auth/change_password	extends COMMON PROTOCOL
 DELETE /auth/unregister	extends COMMON PROTOCOL
 
 	param	session_token : [string]
+
+
+PUT	/auth/change_profile_url extends COMMON PROTOCOL
+
+	param session_token : [string]
+	body	new_profile_url : [string]
 
 
 GET /rank/neigong	extends COMMON PROTOCOL
@@ -91,10 +95,13 @@ GET /notice/today extends COMMON PROTOCOL
 
 PUT /notice/word extends COMMON PROTOCOL
 
+	param		session_token : [string]
 	body		word : [string]
 
 
 POST /files/upload extends COMMON PROTOCOL
+
+	param session_token : [string]
 
 	successful response		id : [string]
 
