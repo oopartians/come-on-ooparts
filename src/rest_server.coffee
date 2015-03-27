@@ -1,7 +1,8 @@
 express = require 'express'
 bodyParser = require 'body-parser'
-db = require './db'
+{join} = require 'path'
 
+db = require './db'
 require './global/api_error'
 require './global/return_member'
 
@@ -27,6 +28,9 @@ class RestServer
 		@sv = (require 'http').Server @app
 
 		@app.use express.query()
+		@app.set 'view engine', 'jade'
+		@app.set 'views', join(__dirname, "../views")
+		@app.use express.static join(__dirname, "../www")
 
 		@app.get '/ping', (req,res) ->
 			res.status(200).send "pong"
@@ -67,6 +71,7 @@ class RestServer
 		@app.use '/admin', (require './admin') global
 		@app.use '/notice', (require './notice') global
 		@app.use '/rank', (require './rank') global
+		@app.use '/tabom', (require './tabom') global
 		@app.use log_error
 		@app.use api_error_handler
 		return

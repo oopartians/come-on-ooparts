@@ -17,13 +17,9 @@ module.exports = (global) ->
 	.post '/aaa', (req,res) ->
 		col = global.col("test")
 
-		col.save req.body, (err,nr_saved) ->
+		col.save req.body, (err) ->
 			if err?
 				res.status(500).send new InternalApiError("db error", err)
-				return
-
-			if nr_saved == 0
-				res.status(500).send new InternalApiError("nr_saved == 0")
 				return
 
 			res.status(200).send()

@@ -25,13 +25,9 @@ module.exports = (global) ->
 				res.status(403).send err
 				return
 
-			col.save req.body, (err,nr_saved) ->
+			col.save req.body, (err) ->
 				if err?
 					res.status(500).send new InternalApiError("db error", err)
-					return
-
-				if nr_saved == 0
-					res.status(500).send new InternalApiError("nr_saved == 0", err)
 					return
 
 				res.status(200).send()
@@ -63,13 +59,9 @@ module.exports = (global) ->
 	.post '/meeting', admin_auth, (req,res) ->
 		meeting_col = global.col("meeting")
 
-		meeting_col.save req.body, (err,nr_saved) ->
+		meeting_col.save req.body, (err) ->
 			if err?
 				res.status(500).send new InternalApiError("db error", err)
-				return
-
-			if nr_saved == 0
-				res.status(500).send new InternalApiError("nr_saved == 0")
 				return
 
 			res.status(200).send()
