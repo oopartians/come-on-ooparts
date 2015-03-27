@@ -39,41 +39,35 @@ module.exports = (global) ->
 					next()
 
 			(next) ->
-				setter =
-					last_attendance_date : now
-					last_attendance_date_time : now.getTime()
-				col.update {_id:member._id}, {$set:setter}, (err,nr_updated) ->
-					if err?
-						next new InternalApiError("db error", err) if err?
-						return
-
-					if nr_updated == 0
-						next new InternalApiError("nr_updated == 0")
-						return
-
-					next()
-
-			(next) ->
 
 				Q = {_id:member._id}
+				set =
+					last_attendance_date : now
+					last_attendance_date_time : now.getTime()
+				inc = {}
 
 				unless member.last_attendance_date?
 					first_connection = true
-					inc_cs_attendance = true
+					set.cs_attendance = 1
 				else
 					is_same_day = check_same_day(member.last_attendance_date, now)
 					is_yesterday = check_yesterday(member.last_attendance_date, now)
 					first_connection = not is_same_day
-					inc_cs_attendance = is_yesterday
+					if is_yesterday
+						# consecutive
+						inc.cs_attendance = 1
+					else if not is_same_day
+						# reset cs_attendance
+						set.cs_attendance = 1
 					# for atomic
 					Q.last_attendance_date_time = member.last_attendance_date_time
 
-				if not inc_cs_attendance
-					next()
-					return
+				U = $set : set
+				if Object.keys(inc).length > 0
+					U.$inc = inc
 
 				# 연속 출석이다.
-				col.update Q, {$inc:{cs_attendance:1}}, (err,nr_updated) ->
+				col.update Q, U, (err,nr_updated) ->
 					if err?
 						next new InternalApiError("db error", err) if err?
 						return
