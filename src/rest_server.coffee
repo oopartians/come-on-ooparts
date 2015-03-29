@@ -1,5 +1,6 @@
 express = require 'express'
 bodyParser = require 'body-parser'
+cookieParser = require 'cookie-parser'
 {join} = require 'path'
 
 db = require './db'
@@ -59,6 +60,7 @@ class RestServer
 
 		db global
 
+		@app.use cookieParser()
 		@app.use (require './auth-middleware') global
 		@app.use '/files', (require './files') global
 

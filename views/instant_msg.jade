@@ -1,0 +1,10 @@
+html(lang="kr")
+	head
+		title="알림"
+
+	body
+		p !{msg}
+
+	script(type='text/javascript').
+		var msg = !{JSON.stringify(msg)}
+	script(src='/js/instant_msg.js')

@@ -1,9 +1,24 @@
 html(lang="kr",ng-app="loginApp")
 	head
 		title="Welcome"
+		link(rel="stylesheet",href='/css/style.css')
 
-	body
-		p hi
-		button#btn_login() 버튼이닷
+	body(ng-controller="LoginCtrl")
+		.container
+			.row
+				.col-md-4
+				.col-md-4
+					h3 로그인이 필요합니다.
+					p
+						input.form-control(ng-model="name", placeholder="이름", type="string")
+					p
+						input.form-control(ng-model="password", type="password", placeholder="비밀번호")
+					p
+						button.btn.btn-lg.btn-outline.btn-primary(type="submit", ng-click="login(name,password)") 로그인
+					p :: Come on OOPArts ::
+				.col-md-4
 
+	script(type='text/javascript').
+		var redirect_url = !{JSON.stringify(redirect_url)}
+	script(src='/js/bower.js')
 	script(src='/js/login.js')

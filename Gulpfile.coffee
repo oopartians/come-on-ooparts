@@ -67,16 +67,16 @@ gulp.task 'css', ['mycss','bower.css','bower.fonts']
 
 gulp.task 'bower.js', ->
 	gulp.src [
-		# "bower_components/jquery/dist/jquery.min.js"
+		"bower_components/jquery/dist/jquery.js"
 		"bower_components/bootstrap/dist/js/bootstrap.min.js"
 		# "bower_components/moment/min/moment-with-langs.min.js"
-		"bower_components/angular/angular.min.js"
+		"bower_components/angular/angular.js"
 		# "bower_components/angular-animate/angular-animate.min.js"
 		# "bower_components/angular-route/angular-route.min.js"
 		# "bower_components/angular-moment/angular-moment.js"
-		# "bower_components/angular-resource/angular-resource.min.js"
+		"bower_components/angular-resource/angular-resource.min.js"
 		"bower_components/async/lib/async.js"
-		"bower_components/lodash/dist/lodash.min.js"
+		"bower_components/lodash/lodash.min.js"
 	], base:'bower_components/'
 		.pipe newer 'www/js/bower.js'
 		.pipe concat 'bower.js'
