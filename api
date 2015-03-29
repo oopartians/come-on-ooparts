@@ -13,6 +13,7 @@ def 	'member' type		id : [string]
 							cs_attendance : [integer number], [optional]
 							mentor : 'member', [optional]
 							mentees : [array of 'member'], [optional]
+							profile_url : [url string], [optional]
 
 
 GET /member/list	extends COMMON PROTOCOL
@@ -110,6 +111,20 @@ GET	/files/:id extends COMMON PROTOCOL
 
 	successful response		[binary]
 
+
+POST /tabom/token extends COMMON PROTOCOL
+
+	succeesful response		token : [string]
+
+
+GET	/tabom/recommend/:token COMMON PROTOCOL
+
+	browser api
+
+
+GET	/tabom/recommend/:token/status/image
+
+	browser api
 
 
 
