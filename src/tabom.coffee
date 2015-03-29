@@ -60,6 +60,13 @@ module.exports = (global) ->
 						res.status(500).send new InternalApiError("nr_updated == 0")
 						return
 
+					col_m = global.col("member")
+					col_m.update {_id:doc.owner}, {$inc:"items.neigong.balance":100}, (err,nr_updated) ->
+						if err?
+							console.log err
+						else if nr_updated == 0
+							console.log "nr_updated == 0"
+
 					res.render "instant_msg", msg : "추천하였습니다."
 
 	ShowImage = (req,res) ->
