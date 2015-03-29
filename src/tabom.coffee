@@ -1,6 +1,7 @@
 express = require 'express'
 {ObjectID} = require 'mongodb'
 async = require 'async'
+fs = require 'fs'
 
 admin_auth = require './some/admin_auth'
 
@@ -64,16 +65,16 @@ module.exports = (global) ->
 	ShowImage = (req,res) ->
 		{token} = req.params
 		col = global.col("tabom")
+
 		col.findOne {_id:ObjectID(token)}, (err,doc) ->
 			if err? or (not doc?)
-				res.setHeader 'Location', "/img/reco_not_found.png"
-				res.send 302
-				return
-
-			{nr_recommended} = doc
-			nr_recommended ?= 0
-			res.setHeader 'Location', "/img/#{get_tabom_img(nr_recommended)}"
-			res.send 302
+				path = "www/img/reco_not_found.png"
+			else
+				{nr_recommended} = doc
+				nr_recommended ?= 0
+				path = "www/img/#{get_tabom_img(nr_recommended)}"
+			r = fs.createReadStream(path)
+			r.pipe(res)
 
 
 	express.Router()
