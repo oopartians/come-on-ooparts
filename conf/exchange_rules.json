@@ -5,7 +5,7 @@
 		}
 	},
 
-	"recommend" : {},
+	"recommend" : null,
 
 	"recommended" : {
 		"added" : {
