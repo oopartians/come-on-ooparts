@@ -65,12 +65,18 @@ gulp.task 'mycss', ->
 
 gulp.task 'css', ['mycss','bower.css','bower.fonts']
 
+gulp.task 'etc', ->
+	gulp.src [
+		"bower_components/angular-resource/angular-resource.min.js.map"
+	], base : "bower_components/angular-resource/"
+		.pipe gulp.dest destinations.js
+
 gulp.task 'bower.js', ->
 	gulp.src [
-		"bower_components/jquery/dist/jquery.js"
+		"bower_components/jquery/dist/jquery.min.js"
 		"bower_components/bootstrap/dist/js/bootstrap.min.js"
 		# "bower_components/moment/min/moment-with-langs.min.js"
-		"bower_components/angular/angular.js"
+		"bower_components/angular/angular.min.js"
 		# "bower_components/angular-animate/angular-animate.min.js"
 		# "bower_components/angular-route/angular-route.min.js"
 		# "bower_components/angular-moment/angular-moment.js"
@@ -88,7 +94,7 @@ gulp.task 'images', ->
 		.pipe gulp.dest destinations.img
 		.on 'error', gulp.util.log
 
-gulp.task 'assets', ['css','js','bower.js','images'], ->
+gulp.task 'assets', ['css','js','bower.js','etc','images'], ->
 	gulp.src ['www/**','!www/*']
 		.pipe gulp.dest 'build'
 
