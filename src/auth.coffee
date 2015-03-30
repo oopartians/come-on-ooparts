@@ -3,6 +3,8 @@ express = require 'express'
 async = require 'async'
 
 {check_same_day,check_yesterday} = require './some/days'
+exrules = require '../conf/exchange_rules.json'
+
 
 session_token_possibles = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 random_string = (n,possibles) ->
@@ -22,6 +24,7 @@ module.exports = (global) ->
 		now = new Date
 		member = null
 		first_connection = null
+		attend_comp = null
 
 		async.waterfall [
 			(next) ->
@@ -78,6 +81,15 @@ module.exports = (global) ->
 
 					next()
 
+			(next) ->
+				return next() unless first_connection
+				return next() unless exrules.attend?
+				global.exchange member._id, exrules.attend, (err,result) ->
+					return next err if err?
+					attend_comp = result
+					next()
+
+
 		], (err) ->
 			return res.status(403).send err if err?
 
@@ -91,6 +103,7 @@ module.exports = (global) ->
 				session_token : session_token
 				you : ReturnMember(member)
 				first_connection : first_connection
+				attend_compensation : attend_comp
 
 	.put '/change_password', (req,res) ->
 		{member} = req

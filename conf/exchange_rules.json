@@ -1,0 +1,15 @@
+{
+	"attend" : {
+		"added" : {
+			"neigong" : 100
+		}
+	},
+
+	"recommend" : {},
+
+	"recommended" : {
+		"added" : {
+			"neigong" : 100
+		}
+	}
+}

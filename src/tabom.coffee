@@ -4,6 +4,7 @@ async = require 'async'
 fs = require 'fs'
 
 admin_auth = require './some/admin_auth'
+exrules = require '../conf/exchange_rules'
 
 get_tabom_img = (n) ->
 	if n <= 10
@@ -25,49 +26,79 @@ module.exports = (global) ->
 		(req,res) ->
 			{token} = req.params
 
-			unless req.member?
-				# relogin
-				res.render 'login', redirect_url : req.originalUrl
-				return
+			doc = null
 
-			col = global.col("tabom")
-			col.findOne {_id:ObjectID(token)}, (err,doc) ->
-				if err?
-					res.status(500).send new InternalApiError("db error", err)
-					return
+			async.series [
 
-				unless doc?
-					res.status(403).send new ApiError("NoSuchTabomToken")
-					return
-
-				if doc.people?[String(req.member._id)]?
-					res.render "instant_msg", msg : "이미 추천하였습니다."
-					return
-
-				Q = {}
-				Q._id = ObjectID(token)
-				Q["people.#{req.member._id}"] = $exists : false
-				setter = {}
-				setter["people.#{req.member._id}"] = n
-				inc = nr_recommended : 1
-				U = $set:setter, $inc : inc
-				col.update Q, U, (err,nr_updated) ->
-					if err?
-						res.status(500).send new InternalApiError("db error", err)
+				(next) ->
+					unless req.member?
+						# relogin
+						res.render 'login', redirect_url : req.originalUrl
 						return
 
-					if nr_updated == 0
-						res.status(500).send new InternalApiError("nr_updated == 0")
-						return
+					next()
+					
 
-					col_m = global.col("member")
-					col_m.update {_id:doc.owner}, {$inc:"items.neigong.balance":100}, (err,nr_updated) ->
+				(next) ->
+					global.col("tabom").findOne {_id:ObjectID(token)}, (err,_doc) ->
 						if err?
-							console.log err
-						else if nr_updated == 0
-							console.log "nr_updated == 0"
+							res.status(500).send new InternalApiError("db error", err)
+							return
 
-					res.render "instant_msg", msg : "추천하였습니다."
+						unless _doc?
+							res.status(403).send new ApiError("NoSuchTabomToken")
+							return
+
+						doc = _doc
+
+						if doc.people?[String(req.member._id)]?
+							res.render "instant_msg", msg : "이미 추천하였습니다."
+							return
+
+						next()
+
+				(next) ->
+					Q = {}
+					Q._id = ObjectID(token)
+					Q["people.#{req.member._id}"] = $exists : false
+					setter = {}
+					setter["people.#{req.member._id}"] = n
+					inc = nr_recommended : 1
+					U = $set:setter, $inc : inc
+					global.col("tabom").update Q, U, (err,nr_updated) ->
+						if err?
+							res.status(500).send new InternalApiError("db error", err)
+							return
+
+						if nr_updated == 0
+							res.status(500).send new InternalApiError("nr_updated == 0")
+							return
+
+						next()
+
+				(next) ->
+					return next() unless exrules.recommend?
+					global.exchange req.member._id, exrules.recommend, (err,result) ->
+						if err?
+							res.status(err.statuscode).send err
+							return
+
+						comp = result
+
+						next()
+
+				(next) ->
+					return next() unless exrules.recommended?
+					global.exchange doc.owner, exrules.recommended, (err) ->
+						if err?
+							res.status(err.statuscode).send err
+							return
+
+						next()
+
+			], ->
+				res.render "instant_msg", msg : "추천하였습니다."
+
 
 	ShowImage = (req,res) ->
 		{token} = req.params

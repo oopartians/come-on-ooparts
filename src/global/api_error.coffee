@@ -20,6 +20,7 @@ class ApiError
 class InternalApiError extends ApiError
 	constructor : (@readable_message,@metas...) ->
 		super "InternalError", @readable_message, @metas...
+		@statuscode = 500
 
 
 # console.log JSON.stringify new ApiError("COdE", "ReAdablE mEsSage")

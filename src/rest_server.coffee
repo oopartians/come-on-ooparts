@@ -3,7 +3,6 @@ bodyParser = require 'body-parser'
 cookieParser = require 'cookie-parser'
 {join} = require 'path'
 
-db = require './db'
 require './global/api_error'
 require './global/return_member'
 
@@ -58,7 +57,8 @@ class RestServer
 			app : @app
 			sessions : {}
 
-		db global
+		(require './modules/db') global
+		(require './modules/exchange') global
 
 		@app.use cookieParser()
 		@app.use (require './auth-middleware') global
